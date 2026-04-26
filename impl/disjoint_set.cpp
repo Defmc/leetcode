@@ -17,13 +17,12 @@ public:
 
   bool unite(const size_t a, const size_t b) {
     size_t fs_a = find(a), fs_b = find(b);
-    if (fs_a != fs_b) {
-      if (size[fs_a] < size[fs_b])
-        std::swap(fs_a, fs_b);
-      parent[fs_b] = fs_a;
-      size[fs_a] += size[fs_b];
+    if (fs_a == fs_b)
       return true;
-    }
+    if (size[fs_a] < size[fs_b])
+      std::swap(fs_a, fs_b);
+    parent[fs_b] = fs_a;
+    size[fs_a] += size[fs_b];
     return false;
   }
 };
