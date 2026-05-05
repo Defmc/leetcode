@@ -9,23 +9,17 @@ struct ListNode {
 };
 
 class Solution {
-  size_t listSize(ListNode *head) {
-    size_t size;
-    ListNode *next = head;
-    for (size = 0; next; next = next->next)
-      size++;
-    return size;
-  }
-
-  size_t getBounds(ListNode **beforeStarter, ListNode **tail, size_t k) {
+  size_t getBounds(ListNode **beforeStarter, ListNode **tail, size_t k,
+                   size_t *size, size_t i) {
     if (!(*beforeStarter)->next) {
       *tail = *beforeStarter;
+      *size = i + 1;
       return 0;
     }
     ListNode *myBeforeStarter = *beforeStarter;
     *beforeStarter = (*beforeStarter)->next;
-    const size_t currK = 1 + getBounds(beforeStarter, tail, k);
-    if (currK == k) {
+    const size_t currK = 1 + getBounds(beforeStarter, tail, k, size, i + 1);
+    if (currK == k % *size) {
       *beforeStarter = myBeforeStarter;
     }
     return currK;
@@ -36,10 +30,10 @@ public:
     if (!head)
       return head;
     ListNode *beforeStarter = head, *tail = head;
-    size_t size = listSize(head);
+    size_t size = 0;
+    getBounds(&beforeStarter, &tail, k, &size, 0);
     if (k % size == 0)
       return head;
-    getBounds(&beforeStarter, &tail, k % size);
     ListNode *start = beforeStarter->next;
     beforeStarter->next = nullptr;
     tail->next = head;
